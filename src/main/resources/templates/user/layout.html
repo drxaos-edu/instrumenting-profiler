@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
       th:fragment="page">
 <head>
     <div th:replace="inc.bootstrap :: head"/>
 
-    <link href="css/dashboard.css" rel="stylesheet"/>
+    <link href="css/common.css" rel="stylesheet"/>
 
     <div th:replace="this :: head"/>
 </head>
@@ -18,8 +17,9 @@
     <div class="row">
         <div th:replace="user/inc.side"/>
 
-        <div th:replace="this :: content"/>
-
+        <div class="app-right-column">
+            <div th:replace="this :: content"/>
+        </div>
     </div>
 </div>
 
