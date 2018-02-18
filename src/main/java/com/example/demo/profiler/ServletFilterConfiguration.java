@@ -1,4 +1,4 @@
-package com.example.demo.filter;
+package com.example.demo.profiler;
 
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

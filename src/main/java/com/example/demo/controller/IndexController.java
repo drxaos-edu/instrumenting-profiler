@@ -14,19 +14,9 @@ public class IndexController {
     @Autowired
     AuthService authService;
 
-    @Autowired
-    UserService userService;
-
     @RequestMapping(value = {"/", "/index"})
-    public ModelAndView index() {
-        ModelAndView mv = new ModelAndView();
-
-        if (authService.hasRole(AuthService.ROLE_USER)) {
-            mv.setViewName("user/home");
-        } else {
-            mv.setViewName("index");
-        }
-        return mv;
+    public String index() {
+        return authService.isAuthorised() ? "user/home" : "index";
     }
 
 }

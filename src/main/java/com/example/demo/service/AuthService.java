@@ -10,17 +10,16 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     public static final String ROLE_ANONYMOUS = "ROLE_ANONYMOUS";
     public static final String ROLE_USER = "ROLE_USER";
-    public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    public static final GrantedAuthority AUTH_ANONYMOUS = new SimpleGrantedAuthority(ROLE_ANONYMOUS);
+
     public static final GrantedAuthority AUTH_USER = new SimpleGrantedAuthority(ROLE_USER);
-    public static final GrantedAuthority AUTH_ADMIN = new SimpleGrantedAuthority(ROLE_ADMIN);
 
     public String getUsername() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null) {
-            return null;
-        }
-        return auth.getName();
+        return auth != null ? auth.getName() : null;
+    }
+
+    public boolean isAuthorised() {
+        return hasRole(ROLE_USER);
     }
 
     public boolean hasRole(String role) {
@@ -35,6 +34,4 @@ public class AuthService {
         }
         return false;
     }
-
-
 }

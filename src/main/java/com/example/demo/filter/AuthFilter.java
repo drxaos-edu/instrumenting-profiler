@@ -12,18 +12,9 @@ public class AuthFilter {
     @Autowired
     AuthService authService;
 
-    @ModelAttribute
-    public void auth(Model model) {
-        if (authService.hasRole(AuthService.ROLE_USER)) {
-            model.addAttribute("__user", true);
-            model.addAttribute("__admin", false);
-        } else if (authService.hasRole(AuthService.ROLE_ADMIN)) {
-            model.addAttribute("__user", true);
-            model.addAttribute("__admin", true);
-        } else {
-            model.addAttribute("__user", false);
-            model.addAttribute("__admin", false);
-        }
+    @ModelAttribute("__username")
+    public String auth(Model model) {
+        return authService.getUsername();
     }
 
 }
