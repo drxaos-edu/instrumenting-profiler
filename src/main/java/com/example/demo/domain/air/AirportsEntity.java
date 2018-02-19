@@ -1,5 +1,7 @@
 package com.example.demo.domain.air;
 
+import org.postgresql.geometric.PGpoint;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -9,8 +11,7 @@ public class AirportsEntity {
     private String airportCode;
     private String airportName;
     private String city;
-    private double longitude;
-    private double latitude;
+    private PGpoint coordinates;
     private String timezone;
     private Collection<FlightsEntity> flightsByAirportCode;
     private Collection<FlightsEntity> flightsByAirportCode_0;
@@ -46,23 +47,13 @@ public class AirportsEntity {
     }
 
     @Basic
-    @Column(name = "longitude")
-    public double getLongitude() {
-        return longitude;
+    @Column(name = "coordinates")
+    public PGpoint getCoordinates() {
+        return coordinates;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    @Basic
-    @Column(name = "latitude")
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
+    public void setCoordinates(PGpoint coordinates) {
+        this.coordinates = coordinates;
     }
 
     @Basic
@@ -82,8 +73,8 @@ public class AirportsEntity {
 
         AirportsEntity that = (AirportsEntity) o;
 
-        if (Double.compare(that.longitude, longitude) != 0) return false;
-        if (Double.compare(that.latitude, latitude) != 0) return false;
+        if (Double.compare(that.coordinates.x, coordinates.x) != 0) return false;
+        if (Double.compare(that.coordinates.y, coordinates.y) != 0) return false;
         if (airportCode != null ? !airportCode.equals(that.airportCode) : that.airportCode != null) return false;
         if (airportName != null ? !airportName.equals(that.airportName) : that.airportName != null) return false;
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
@@ -99,9 +90,9 @@ public class AirportsEntity {
         result = airportCode != null ? airportCode.hashCode() : 0;
         result = 31 * result + (airportName != null ? airportName.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
-        temp = Double.doubleToLongBits(longitude);
+        temp = Double.doubleToLongBits(coordinates.x);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(latitude);
+        temp = Double.doubleToLongBits(coordinates.y);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (timezone != null ? timezone.hashCode() : 0);
         return result;
