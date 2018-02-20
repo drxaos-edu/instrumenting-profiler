@@ -10,8 +10,8 @@ public class TicketsEntity {
     private String bookRef;
     private String passengerId;
     private String passengerName;
-    private Collection<TicketFlightsEntity> ticketFlightsByTicketNo;
-    private BookingsEntity bookingsByBookRef;
+    private Collection<TicketFlight> ticketFlightsByTicketNo;
+    private Booking bookingsByBookRef;
 
     @Id
     @Column(name = "ticket_no")
@@ -79,21 +79,21 @@ public class TicketsEntity {
     }
 
     @OneToMany(mappedBy = "ticketsByTicketNo", fetch = FetchType.LAZY)
-    public Collection<TicketFlightsEntity> getTicketFlightsByTicketNo() {
+    public Collection<TicketFlight> getTicketFlightsByTicketNo() {
         return ticketFlightsByTicketNo;
     }
 
-    public void setTicketFlightsByTicketNo(Collection<TicketFlightsEntity> ticketFlightsByTicketNo) {
+    public void setTicketFlightsByTicketNo(Collection<TicketFlight> ticketFlightsByTicketNo) {
         this.ticketFlightsByTicketNo = ticketFlightsByTicketNo;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_ref", referencedColumnName = "book_ref", nullable = false, insertable = false, updatable = false)
-    public BookingsEntity getBookingsByBookRef() {
+    public Booking getBookingsByBookRef() {
         return bookingsByBookRef;
     }
 
-    public void setBookingsByBookRef(BookingsEntity bookingsByBookRef) {
+    public void setBookingsByBookRef(Booking bookingsByBookRef) {
         this.bookingsByBookRef = bookingsByBookRef;
     }
 }

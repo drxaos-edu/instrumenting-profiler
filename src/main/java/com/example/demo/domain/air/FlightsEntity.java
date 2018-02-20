@@ -15,10 +15,10 @@ public class FlightsEntity {
     private String status;
     private Timestamp actualDeparture;
     private Timestamp actualArrival;
-    private AirportsEntity airportsByDepartureAirport;
-    private AirportsEntity airportsByArrivalAirport;
-    private AircraftsEntity aircraftsByAircraftCode;
-    private Collection<TicketFlightsEntity> ticketFlightsByFlightId;
+    private Airport airportsByDepartureAirport;
+    private Airport airportsByArrivalAirport;
+    private Aircraft aircraftsByAircraftCode;
+    private Collection<TicketFlight> ticketFlightsByFlightId;
 
     @Id
     @Column(name = "flight_id")
@@ -126,40 +126,40 @@ public class FlightsEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "departure_airport", referencedColumnName = "airport_code", nullable = false)
-    public AirportsEntity getAirportsByDepartureAirport() {
+    public Airport getAirportsByDepartureAirport() {
         return airportsByDepartureAirport;
     }
 
-    public void setAirportsByDepartureAirport(AirportsEntity airportsByDepartureAirport) {
+    public void setAirportsByDepartureAirport(Airport airportsByDepartureAirport) {
         this.airportsByDepartureAirport = airportsByDepartureAirport;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "arrival_airport", referencedColumnName = "airport_code", nullable = false)
-    public AirportsEntity getAirportsByArrivalAirport() {
+    public Airport getAirportsByArrivalAirport() {
         return airportsByArrivalAirport;
     }
 
-    public void setAirportsByArrivalAirport(AirportsEntity airportsByArrivalAirport) {
+    public void setAirportsByArrivalAirport(Airport airportsByArrivalAirport) {
         this.airportsByArrivalAirport = airportsByArrivalAirport;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aircraft_code", referencedColumnName = "aircraft_code", nullable = false, insertable = false, updatable = false)
-    public AircraftsEntity getAircraftsByAircraftCode() {
+    public Aircraft getAircraftsByAircraftCode() {
         return aircraftsByAircraftCode;
     }
 
-    public void setAircraftsByAircraftCode(AircraftsEntity aircraftsByAircraftCode) {
+    public void setAircraftsByAircraftCode(Aircraft aircraftsByAircraftCode) {
         this.aircraftsByAircraftCode = aircraftsByAircraftCode;
     }
 
     @OneToMany(mappedBy = "flightsByFlightId", fetch = FetchType.LAZY)
-    public Collection<TicketFlightsEntity> getTicketFlightsByFlightId() {
+    public Collection<TicketFlight> getTicketFlightsByFlightId() {
         return ticketFlightsByFlightId;
     }
 
-    public void setTicketFlightsByFlightId(Collection<TicketFlightsEntity> ticketFlightsByFlightId) {
+    public void setTicketFlightsByFlightId(Collection<TicketFlight> ticketFlightsByFlightId) {
         this.ticketFlightsByFlightId = ticketFlightsByFlightId;
     }
 }

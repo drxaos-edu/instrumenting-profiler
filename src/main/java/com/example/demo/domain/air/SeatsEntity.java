@@ -9,7 +9,7 @@ public class SeatsEntity {
     private String aircraftCode;
     private String seatNo;
     private String fareConditions;
-    private AircraftsEntity aircraftsByAircraftCode;
+    private Aircraft aircraftsByAircraftCode;
 
     @Id
     @Column(name = "aircraft_code")
@@ -66,11 +66,11 @@ public class SeatsEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "aircraft_code", referencedColumnName = "aircraft_code", nullable = false, insertable = false, updatable = false)
-    public AircraftsEntity getAircraftsByAircraftCode() {
+    public Aircraft getAircraftsByAircraftCode() {
         return aircraftsByAircraftCode;
     }
 
-    public void setAircraftsByAircraftCode(AircraftsEntity aircraftsByAircraftCode) {
+    public void setAircraftsByAircraftCode(Aircraft aircraftsByAircraftCode) {
         this.aircraftsByAircraftCode = aircraftsByAircraftCode;
     }
 }
