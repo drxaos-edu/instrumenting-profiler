@@ -39,8 +39,8 @@ public class Airport {
     private String timezone;
 
     @OneToMany(mappedBy = "airportsByDepartureAirport", fetch = FetchType.LAZY)
-    private Collection<FlightsEntity> flightsByAirportCode;
+    private Collection<Flight> flightsByAirportCode;
 
     @OneToMany(mappedBy = "airportsByArrivalAirport", fetch = FetchType.LAZY)
-    private Collection<FlightsEntity> flightsByAirportCode_0;
+    private Collection<Flight> flightsByAirportCode_0;
 }

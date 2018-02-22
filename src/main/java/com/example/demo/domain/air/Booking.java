@@ -28,5 +28,5 @@ public class Booking {
     private BigDecimal totalAmount;
 
     @OneToMany(mappedBy = "bookingsByBookRef", fetch = FetchType.LAZY)
-    private Collection<TicketsEntity> ticketsByBookRef;
+    private Collection<Ticket> ticketsByBookRef;
 }

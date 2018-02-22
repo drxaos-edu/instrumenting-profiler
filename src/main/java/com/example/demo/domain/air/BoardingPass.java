@@ -11,7 +11,7 @@ import javax.persistence.*;
 @ToString(of = {"ticketNo", "flightId", "boardingNo", "seatNo"})
 @Entity
 @Table(name = "boarding_passes", schema = "bookings", catalog = "demo")
-@IdClass(TicketFlightsEntityPK.class)
+@IdClass(TicketFlightPK.class)
 public class BoardingPass {
 
     @Id

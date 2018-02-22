@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @ToString(of = {"ticketNo", "flightId", "fareConditions", "amount"})
 @Entity
 @Table(name = "ticket_flights", schema = "bookings", catalog = "demo")
-@IdClass(TicketFlightsEntityPK.class)
+@IdClass(TicketFlightPK.class)
 public class TicketFlight {
 
     @Id
@@ -36,9 +36,9 @@ public class TicketFlight {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ticket_no", referencedColumnName = "ticket_no", nullable = false, insertable = false, updatable = false)
-    private TicketsEntity ticketsByTicketNo;
+    private Ticket ticketsByTicketNo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flight_id", referencedColumnName = "flight_id", nullable = false, insertable = false, updatable = false)
-    private FlightsEntity flightsByFlightId;
+    private Flight flightsByFlightId;
 }

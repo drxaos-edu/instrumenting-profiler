@@ -9,7 +9,7 @@ import java.util.Collection;
 
 @Data
 @EqualsAndHashCode(of = {"aircraftCode"}, doNotUseGetters = true)
-@ToString(of = {"aircraftCode", "model", "range", "description"})
+@ToString(of = {"aircraftCode", "model", "range"})
 @Entity
 @Table(name = "aircrafts", schema = "bookings", catalog = "demo")
 public class Aircraft {
@@ -23,12 +23,9 @@ public class Aircraft {
     @Basic
     private int range;
 
-    @Basic
-    private String description;
+    @OneToMany(mappedBy = "aircraftsByAircraftCode", fetch = FetchType.LAZY)
+    private Collection<Flight> flightsByAircraftCode;
 
     @OneToMany(mappedBy = "aircraftsByAircraftCode", fetch = FetchType.LAZY)
-    private Collection<FlightsEntity> flightsByAircraftCode;
-
-    @OneToMany(mappedBy = "aircraftsByAircraftCode", fetch = FetchType.LAZY)
-    private Collection<SeatsEntity> seatsByAircraftCode;
+    private Collection<Seat> seatsByAircraftCode;
 }
