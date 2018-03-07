@@ -1,5 +1,6 @@
 package com.example.demo.domain;
 
+import com.example.demo.domain.air.PostgresqlDialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -44,6 +45,7 @@ public class AirDbConfig {
         properties.put("hibernate.hbm2ddl.auto", "none");
         properties.put("hibernate.physical_naming_strategy", SpringPhysicalNamingStrategy.class.getName());
         properties.put("hibernate.implicit_naming_strategy", SpringImplicitNamingStrategy.class.getName());
+        properties.put("hibernate.dialect", PostgresqlDialect.class.getName());
         return
                 builder
                         .dataSource(dataSource)

@@ -13,6 +13,6 @@ public interface TicketsRepository extends CrudRepository<Ticket, String> {
 
     List<Ticket> findByPassengerNameLike(String search);
 
-    @Query(name = "Ticket.findAllSurnames", value = "select split_part(t.passenger_name, ' ', 2) from tickets t group by split_part(t.passenger_name, ' ', 2) order by 1")
+    @Query(name = "Ticket.findAllSurnames", value = "select split_part(t.passengerName, ' ', 2) from Ticket t group by split_part(t.passengerName, ' ', 2) order by 1")
     List<String> findAllSurnames();
 }
