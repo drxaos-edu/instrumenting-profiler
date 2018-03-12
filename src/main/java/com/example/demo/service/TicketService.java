@@ -1,10 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.domain.air.Ticket;
-import com.example.demo.domain.air.TicketsRepository;
+import com.example.demo.domain.air.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +13,12 @@ public class TicketService {
 
     @Autowired
     TicketsRepository ticketsRepository;
+
+    @Autowired
+    TicketFlightsRepository ticketFlightsRepository;
+
+    @Autowired
+    BoardingPassesRepository boardingPassesRepository;
 
     public List<String> listNamesBySurname(String surname) {
         List<String> names = new ArrayList<>();
@@ -73,4 +79,39 @@ public class TicketService {
         return ticketsRepository.findAllSurnames();
     }
 
+
+    public String getTicketByPassengerAndFlight(String fullName, String id, int flight) {
+        List<String> tickets = listTicketsByPassenger(fullName, id);
+        List<TicketFlight> ticketFlightList = ticketFlightsRepository.findAllByFlightId(flight);
+        for (TicketFlight ticketFlight : ticketFlightList) {
+            if (tickets.contains(ticketFlight.getTicketNo())) {
+                return ticketFlight.getTicketNo();
+            }
+        }
+        return null;
+    }
+
+    public String getSeatByPassengerAndFlight(String fullName, String id, int flight) {
+        String ticketNo = getTicketByPassengerAndFlight(fullName, id, flight);
+        BoardingPass boardingPass = boardingPassesRepository.findByTicketNoAndFlightId(ticketNo, flight);
+        return boardingPass != null ? boardingPass.getSeatNo() : null;
+    }
+
+    public String getFareConditionsByPassengerAndFlight(String fullName, String id, int flight) {
+        String ticketNo = getTicketByPassengerAndFlight(fullName, id, flight);
+        TicketFlight ticketFlight = ticketFlightsRepository.findByTicketNoAndFlightId(ticketNo, flight);
+        return ticketFlight.getFareConditions();
+    }
+
+    public BigDecimal getAmountByPassengerAndFlight(String fullName, String id, int flight) {
+        String ticketNo = getTicketByPassengerAndFlight(fullName, id, flight);
+        TicketFlight ticketFlight = ticketFlightsRepository.findByTicketNoAndFlightId(ticketNo, flight);
+        return ticketFlight.getAmount();
+    }
+
+    public String getTicketInfo(String fullName, String id, int flight) {
+        String seat = getSeatByPassengerAndFlight(fullName, id, flight);
+        return "Seat " + (seat != null ? seat : "N/A") +
+                " (" + getFareConditionsByPassengerAndFlight(fullName, id, flight) + ", " + getAmountByPassengerAndFlight(fullName, id, flight) + " RUR)";
+    }
 }

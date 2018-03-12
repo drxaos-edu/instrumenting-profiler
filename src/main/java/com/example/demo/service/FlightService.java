@@ -97,7 +97,7 @@ public class FlightService {
                 " at " + formatTime(f.getAirportsByDepartureAirport(), f.getScheduledDeparture()) +
                 "\n to " + f.getAirportsByArrivalAirport().getAirportCode() + " (" + f.getAirportsByArrivalAirport().getAirportName() + ")" +
                 " at " + formatTime(f.getAirportsByArrivalAirport(), f.getScheduledArrival()) +
-                "\n status " + f.getStatus();
+                "\n status " + f.getStatus() + "\n";
 
     }
 }
