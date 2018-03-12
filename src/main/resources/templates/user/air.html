@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:include="user/layout :: page">
+<head th:fragment="head" th:remove="tag">
+    <title>Air :: Sample Application</title>
+</head>
+<body>
+<div th:fragment="content" th:remove="tag">
+
+    <div class="row">
+        <div class="col-lg">
+
+            <form method="post" th:object="${cmd}" th:action="@{/air/next}" style="padding-bottom: 10rem">
+
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="form-group">
+                            <label for="surnameInput">Surname</label>
+                            <input type="text" class="form-control" id="surnameInput" name="surname"
+                                   placeholder="Enter surname" th:value="*{surname}"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <select class="custom-select" id="surnameSelect">
+                                <option selected="selected">Search...</option>
+                                <option th:each="sn : *{surnameOptions}" th:value="${sn}" th:text="${sn}">SURNAME
+                                </option>
+                            </select>
+                            <script>
+                                $("#surnameSelect").change(function (e) {
+                                    $("#surnameInput").val($("#surnameSelect").val());
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-lg"></div>
+                </div>
+
+                <div class="row" th:if="*{nameVisible}">
+                    <div class="col-sm">
+                        <div class="form-group">
+                            <label for="nameInput">Name</label>
+                            <input type="text" class="form-control" id="nameInput" name="name" placeholder="Enter name"
+                                   th:value="*{name}"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <select class="custom-select" id="nameSelect">
+                                <option selected="selected">Search...</option>
+                                <option th:each="n : *{nameOptions}" th:value="${n}" th:text="${n}">NAME
+                                </option>
+                            </select>
+                            <script>
+                                $("#nameSelect").change(function (e) {
+                                    $("#nameInput").val($("#nameSelect").val());
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-lg"></div>
+                </div>
+
+                <div class="row" th:if="*{imageDataVisible}">
+                    <div class="col-sm">
+                        <img th:src="*{imageData}" style="max-width: 250px; max-height: 250px" class="mb-3"/>
+                    </div>
+                    <div class="col-lg"></div>
+                </div>
+
+                <div class="row" th:if="*{idVisible}">
+                    <div class="col-sm">
+                        <div class="form-group">
+                            <label for="idInput">Passport</label>
+                            <input type="text" class="form-control" id="idInput" name="id"
+                                   placeholder="Enter passport number"
+                                   th:value="*{id}"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <select class="custom-select" id="idSelect">
+                                <option selected="selected">Search...</option>
+                                <option th:each="id : *{idOptions}" th:value="${id}" th:text="${id}">ID</option>
+                            </select>
+                            <script>
+                                $("#idSelect").change(function (e) {
+                                    $("#idInput").val($("#idSelect").val());
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-lg"></div>
+                </div>
+
+                <div class="row" th:if="*{airportVisible}">
+                    <div class="col-sm">
+                        <div class="form-group">
+                            <label for="airportInput">Airport</label>
+                            <input type="text" class="form-control" id="airportInput" name="airport"
+                                   placeholder="Enter airport" th:value="*{airport}"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <select class="custom-select" id="airportSelect">
+                                <option selected="selected">Search...</option>
+                                <option th:each="ap : *{airportOptions}" th:value="${ap}"
+                                        th:text="${cmd.airportInfo.get(ap)}">AIRPORT
+                                </option>
+                            </select>
+                            <script>
+                                $("#airportSelect").change(function (e) {
+                                    $("#airportInput").val($("#airportSelect").val());
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-lg"></div>
+                </div>
+
+                <div class="row" th:if="*{departureVisible}">
+                    <div class="col-sm">
+                        <div class="form-group">
+                            <label for="departureInput">Departure time</label>
+                            <input type="text" class="form-control" id="departureInput" name="departure"
+                                   placeholder="Enter departure" th:value="*{departure}"/>
+                        </div>
+                        <div class="input-group mb-3">
+                            <select class="custom-select" id="departureSelect">
+                                <option selected="selected">Search...</option>
+                                <option th:each="dt : *{departureOptions}" th:value="${dt}" th:text="${dt}">DEPARTURE
+                                </option>
+                            </select>
+                            <script>
+                                $("#departureSelect").change(function (e) {
+                                    $("#departureInput").val($("#departureSelect").val());
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-lg"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary mb-3">Apply</button>
+
+                <div class="row" th:if="*{flightInfoVisible}">
+                    <div class="col-sm">
+                        <pre th:text="*{flightInfo}" style="font-size: large">INFO</pre>
+                    </div>
+                    <div class="col-lg"></div>
+                </div>
+           </form>
+
+
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,11 +1,11 @@
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0" xmlns:th="http://www.w3.org/1999/xhtml">
-    <a class="navbar-brand col-sm-3 col-md-3 col-lg-2 mr-0 app-left-column" href="#">
+    <a class="navbar-brand col-sm-3 col-md-3 col-lg-2 mr-0 app-left-column" th:href="@{/}">
         <i data-feather="box" style="margin-right: 4px"></i> Sample Application
     </a>
     <span class="w-100 text-light bg-dark px-3" th:text="${__navigation.active.title}">Title</span>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" th:href="@{/logout}"><i data-feather="log-out"/> Sign out</a>
+            <a class="nav-link" th:href="@{/logout}"><i data-feather="log-out"/> Log out</a>
         </li>
     </ul>
 </nav>

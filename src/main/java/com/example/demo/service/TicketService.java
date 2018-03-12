@@ -51,12 +51,12 @@ public class TicketService {
     }
 
     public List<String> listIdsByPassengerName(String fullName) {
-        List<Ticket> tickets = ticketsRepository.findByPassengerNameLike("% " + fullName.replace("*", "%").toUpperCase());
+        List<Ticket> tickets = ticketsRepository.findByPassengerNameLike(fullName.replace("*", "%").toUpperCase());
         return findDistinctIds(tickets);
     }
 
     public List<String> listTicketsByPassenger(String fullName, String id) {
-        List<Ticket> tickets = ticketsRepository.findByPassengerNameLike("% " + fullName.replace("*", "%").toUpperCase());
+        List<Ticket> tickets = ticketsRepository.findByPassengerNameLike(fullName.replace("*", "%").toUpperCase());
 
         List<String> ticketsNo = new ArrayList<>();
         for (Ticket ticket : tickets) {

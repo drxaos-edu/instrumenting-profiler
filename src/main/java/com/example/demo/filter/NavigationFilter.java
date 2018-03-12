@@ -1,9 +1,6 @@
 package com.example.demo.filter;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.experimental.Delegate;
-import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -15,9 +12,8 @@ import java.util.Iterator;
 public class NavigationFilter {
     static String[] NAVS = {
             // url, icon, name, title
-            "/", "home", "Dashboard", "Profiler info",
-            "/one", "file-text", "Example #1 (Lucene)", "Russian spelling",
-            "/two", "help-circle", "Example #2 (???)", "Next example"
+            "/", "home", "Dashboard", "Dashboard",
+            "/air", "file-text", "Passenger registration", "Passenger registration",
     };
 
     @ModelAttribute("__navigation")
@@ -33,7 +29,7 @@ public class NavigationFilter {
 
         Navigation(String currentUrl) {
             for (int i = 0; i < NAVS.length; i += 4) {
-                boolean isActive = NAVS[i].equals(currentUrl);
+                boolean isActive = NAVS[i].equals(currentUrl) || currentUrl.startsWith(NAVS[i] + "/");
                 Nav nav = new Nav(
                         NAVS[i],
                         NAVS[i + 1],
