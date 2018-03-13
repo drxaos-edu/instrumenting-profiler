@@ -1,4 +1,4 @@
-package com.example.demo.profiler;
+package com.example.demo.profiler.servlet;
 
 import com.example.demo.profiler.records.Profiler;
 import com.example.demo.profiler.records.Record;
