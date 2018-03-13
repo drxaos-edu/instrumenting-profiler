@@ -133,6 +133,7 @@
                 </configuration>
             </plugin>
 
+            <!--TODO-->
             <!--<plugin>-->
                 <!--<groupId>de.icongmbh.oss.maven.plugins</groupId>-->
                 <!--<artifactId>javassist-maven-plugin</artifactId>-->

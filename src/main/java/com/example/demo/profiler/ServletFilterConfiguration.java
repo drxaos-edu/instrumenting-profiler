@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.Filter;
 
-@Configuration
+//TODO @Configuration
 public class ServletFilterConfiguration {
 
     @Bean
