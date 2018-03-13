@@ -1,5 +1,9 @@
 package com.example.demo.domain;
 
+import com.example.demo.profiler.Profiler;
+import com.example.demo.profiler.util.RecordUtil;
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
+import org.hibernate.dialect.MySQL57InnoDBDialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -35,19 +39,34 @@ public class MainDbConfig {
         return DataSourceBuilder.create().build();
     }
 
+    @Bean(name = "proxyDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource proxyDataSource() {
+        return ProxyDataSourceBuilder
+                .create(dataSource())
+                .beforeQuery((execInfo, queryInfoList) -> {
+                    Profiler.startCall("DB", RecordUtil.queryToCall(queryInfoList));
+                })
+                .afterQuery((execInfo, queryInfoList) -> {
+                    Profiler.endCall("DB", RecordUtil.queryToCall(queryInfoList));
+                })
+                .build();
+    }
+
     @Primary
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean
     entityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("dataSource") DataSource dataSource
+            @Qualifier("proxyDataSource") DataSource proxyDataSource
     ) {
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("hibernate.hbm2ddl.auto", "create-drop");
         properties.put("hibernate.physical_naming_strategy", SpringPhysicalNamingStrategy.class.getName());
         properties.put("hibernate.implicit_naming_strategy", SpringImplicitNamingStrategy.class.getName());
+        properties.put("hibernate.dialect", MySQL57InnoDBDialect.class.getName());
         return builder
-                .dataSource(dataSource)
+                .dataSource(proxyDataSource)
                 .packages("com.example.demo.domain.main")
                 .persistenceUnit("main")
                 .properties(properties)

@@ -1,6 +1,9 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.air.PostgresqlDialect;
+import com.example.demo.profiler.Profiler;
+import com.example.demo.profiler.util.RecordUtil;
+import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -31,15 +34,29 @@ public class AirDbConfig {
 
     @Bean(name = "airDataSource")
     @ConfigurationProperties(prefix = "air.datasource")
-    public DataSource dataSource() {
+    public DataSource airDataSource() {
         return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "proxyAirDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource proxyAirDataSource() {
+        return ProxyDataSourceBuilder
+                .create(airDataSource())
+                .beforeQuery((execInfo, queryInfoList) -> {
+                    Profiler.startCall("DB", RecordUtil.queryToCall(queryInfoList));
+                })
+                .afterQuery((execInfo, queryInfoList) -> {
+                    Profiler.endCall("DB", RecordUtil.queryToCall(queryInfoList));
+                })
+                .build();
     }
 
     @Bean(name = "airEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean
     airEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("airDataSource") DataSource dataSource
+            @Qualifier("proxyAirDataSource") DataSource proxyAirDataSource
     ) {
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("hibernate.hbm2ddl.auto", "none");
@@ -48,7 +65,7 @@ public class AirDbConfig {
         properties.put("hibernate.dialect", PostgresqlDialect.class.getName());
         return
                 builder
-                        .dataSource(dataSource)
+                        .dataSource(proxyAirDataSource)
                         .packages("com.example.demo.domain.air")
                         .persistenceUnit("air")
                         .properties(properties)

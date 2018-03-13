@@ -1,6 +1,5 @@
 package com.example.demo.profiler.transformer;
 
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 
 public class Agent {
@@ -10,7 +9,7 @@ public class Agent {
         Agent.instrumentation = instrumentation;
     }
 
-    public static void addTransformer(ClassFileTransformer transformer) {
-        instrumentation.addTransformer(transformer);
+    public static void enableProfiling() {
+        instrumentation.addTransformer(new ProfilingClassFileTransformer());
     }
 }

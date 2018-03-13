@@ -1,39 +1,34 @@
 package com.example.demo.profiler;
 
-import com.example.demo.profiler.records.Record;
-import com.example.demo.profiler.util.RecordUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Arrays;
 
-public class ProfilingServletFilter implements Filter {
+public class ThreadNameServletFilter implements Filter {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
 
+        String defaultThreadName = Thread.currentThread().getName();
         try {
+            String method = request.getMethod();
             String url = request.getRequestURI();
+            String user = SecurityContextHolder.getContext().getAuthentication().getName();
+            String cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("JSESSIONID")).map(Cookie::getValue).findFirst().orElse("-");
+            Thread.currentThread().setName("(Request) " + method + url + " - " + cookie + " (" + user + ")");
 
-            Profiler.beginRecord(url);
             chain.doFilter(req, res);
         } finally {
-            try {
-                Record record = Profiler.finishRecord();
-                if (record.duration() > 10) {
-                    String dump = RecordUtil.dump(record, 3);
-                    System.out.println("\n\n" + dump + "\n\n");
-                }
-            } catch (Exception e) {
-                log.error("profiler error", e);
-            }
-
+            Thread.currentThread().setName(defaultThreadName);
         }
-
     }
 
     @Override

@@ -36,7 +36,7 @@ public class Profiler {
         );
     }
 
-    public static void endCall(String c, String m) {
+    public static void endCall(String cls, String mth) {
         Record rec = records.get();
         if (rec == null || rec.getCalls().size() > 50100) {
             return;
@@ -45,8 +45,8 @@ public class Profiler {
         int depth = rec.getCalls().size() > 0 ? rec.getCalls().get(rec.getCalls().size() - 1).getDepth() : 0;
 
         rec.addCall(new Call()
-                .cls(c)
-                .mth(m)
+                .cls(cls)
+                .mth(mth)
                 .end(System.currentTimeMillis())
                 .depth(depth - 1)
         );

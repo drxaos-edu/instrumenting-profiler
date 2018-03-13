@@ -22,4 +22,8 @@ public class Record {
     public void end() {
         this.end = System.currentTimeMillis();
     }
+
+    public long duration() {
+        return this.getEnd() - this.getStart();
+    }
 }

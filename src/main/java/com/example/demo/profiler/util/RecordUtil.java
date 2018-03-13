@@ -3,15 +3,24 @@ package com.example.demo.profiler.util;
 import com.example.demo.profiler.records.Call;
 import com.example.demo.profiler.records.Record;
 import com.example.demo.profiler.records.Top;
+import net.ttddyy.dsproxy.QueryInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class RecordUtil {
 
-    public String dump(Record record, long lowThreshold) {
+    public static String queryToCall(List<QueryInfo> queryInfoList) {
+        StringBuilder sb = new StringBuilder();
+        for (QueryInfo queryInfo : queryInfoList) {
+            if (sb.length() > 0) {
+                sb.append(" || ");
+            }
+            sb.append(queryInfo.getQuery());
+        }
+        return sb.toString();
+    }
+
+    public static String dump(Record record, long lowThreshold) {
         ArrayList<Call> calls = record.getCalls();
 
         long now = System.currentTimeMillis();
@@ -28,6 +37,18 @@ public class RecordUtil {
                 map.get(next.getDepth() + 1).end(next.getEnd()); // приклеиваем к началу конец
                 iterator.remove();
             }
+        }
+
+        // у вызовов будет end=null, если размер дампа превышен, фиксим это
+
+        boolean veryLongTrace = false;
+        if (calls.size() > 25000) {
+            veryLongTrace = true;
+            calls.forEach(call -> {
+                if (call.getEnd() == null) {
+                    call.end(now);
+                }
+            });
         }
 
         // Топ SQL-запросов по сумме времени выполнения
@@ -52,7 +73,7 @@ public class RecordUtil {
 
         // Удаляем все слишком быстрые вызовы
 
-        calls.removeIf(next -> next.getEnd() - next.getStart() < lowThreshold);
+        calls.removeIf(next -> !next.getCls().equals("DB") && next.getEnd() - next.getStart() < lowThreshold);
 
         // Дампим в строку все что получилось
 
@@ -61,7 +82,7 @@ public class RecordUtil {
 
         long fullTime = (record.getEnd() != null && record.getStart() != null) ? (record.getEnd() - record.getStart()) : -1;
         sb.append("\n\n### ").append(record.getUrl()).append(" ### [").append(traceLength).append("] ").append(fullTime).append("ms\n");
-        if (traceLength > 25000) {
+        if (veryLongTrace) {
             sb.append("!!! Very long trace\n");
         }
         for (Call call : calls) {
