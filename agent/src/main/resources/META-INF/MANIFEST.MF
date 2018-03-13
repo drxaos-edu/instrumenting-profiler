@@ -1,7 +1,2 @@
 Manifest-Version: 1.0
 PreMain-Class: com.example.demo.profiler.transformer.Agent
-Can-Redefine-Classes: true
-Can-Retransform-Classes: true
-Can-Set-Native-Method-Prefix: true
-Implementation-Title: ProfilerAgent
-Implementation-Version: 0.0.1-SNAPSHOT

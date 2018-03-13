@@ -2,22 +2,31 @@ package com.example.demo.profiler.util;
 
 import com.example.demo.profiler.records.Call;
 import com.example.demo.profiler.records.Record;
-import com.example.demo.profiler.records.Top;
-import net.ttddyy.dsproxy.QueryInfo;
+import lombok.Data;
 
 import java.util.*;
 
 public class RecordUtil {
 
-    public static String queryToCall(List<QueryInfo> queryInfoList) {
-        StringBuilder sb = new StringBuilder();
-        for (QueryInfo queryInfo : queryInfoList) {
-            if (sb.length() > 0) {
-                sb.append(" || ");
-            }
-            sb.append(queryInfo.getQuery());
+    @Data
+    public static class QueryTop implements Comparable<QueryTop> {
+        private long time = 0;
+        private long count = 0;
+
+        public int compareTo(QueryTop o) {
+            return Long.valueOf(o.time).compareTo(time);
         }
-        return sb.toString();
+    }
+
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+        List<Map.Entry<K, V>> list = new LinkedList<Map.Entry<K, V>>(map.entrySet());
+        list.sort(Comparator.comparing(o -> (o.getValue())));
+
+        Map<K, V> result = new LinkedHashMap<K, V>();
+        for (Map.Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
     }
 
     public static String dump(Record record, long lowThreshold) {
@@ -53,23 +62,24 @@ public class RecordUtil {
 
         // Топ SQL-запросов по сумме времени выполнения
 
-        int sqls = 0;
-        Map<String, Top> top = new HashMap<>();
-        for (Call call : calls) {
-            if (!call.getCls().equals("DB")) { // у запросов вместо класса строка "DB"
-                continue;
-            }
-            sqls++;
-            long t = call.getEnd() - call.getStart();
-            if (t > 0) {
-                String sql = call.getMth();
-                Top e = top.computeIfAbsent(sql, k -> new Top());
-                e.setTime(e.getTime() + t);
-                e.setCount(e.getCount() + 1);
-            }
-        }
-
-        top = MapUtil.sortByValue(top); // сортируем по убыванию времени
+//TODO
+//        int sqls = 0;
+//        Map<String, QueryTop> top = new HashMap<>();
+//        for (Call call : calls) {
+//            if (!call.getCls().equals("DB")) { // у запросов вместо класса строка "DB"
+//                continue;
+//            }
+//            sqls++;
+//            long t = call.getEnd() - call.getStart();
+//            if (t > 0) {
+//                String sql = call.getMth();
+//                QueryTop e = top.computeIfAbsent(sql, k -> new QueryTop());
+//                e.setTime(e.getTime() + t);
+//                e.setCount(e.getCount() + 1);
+//            }
+//        }
+//
+//        top = sortByValue(top); // сортируем по убыванию времени
 
         // Удаляем все слишком быстрые вызовы
 
@@ -91,23 +101,29 @@ public class RecordUtil {
             }
             String mth = call.getMth();
             String cls = call.getCls();
-            if ("DB".equals(cls)) {
-                mth = SqlUtil.stripSqlData(mth);
-            }
+
+//TODO
+//            if ("DB".equals(cls)) {
+//                mth = QueryUtil.stripSqlData(mth);
+//            }
+
             sb.append(cls).append("::").append(mth).append(" - ").append((call.getEnd() != null ? call.getEnd() : now) - (call.getStart() != null ? call.getStart() : now)).append("ms (").append(call.getStart()).append("-").append(call.getEnd()).append(")\n");
         }
-        if (top.size() > 0) {
-            sb.append("### ").append("SQL").append(" ### [").append(sqls).append("]\n");
-            int n = 0;
-            for (Map.Entry<String, Top> e : top.entrySet()) {
-                String sql = SqlUtil.stripSqlData(e.getKey());
 
-                sb.append(e.getValue().getTime()).append("ms [").append(e.getValue().getCount()).append("] ").append(sql).append("\n");
-                if (++n >= 10) {
-                    break;
-                }
-            }
-        }
+//TODO
+//        if (top.size() > 0) {
+//            sb.append("### ").append("SQL").append(" ### [").append(sqls).append("]\n");
+//            int n = 0;
+//            for (Map.Entry<String, QueryTop> e : top.entrySet()) {
+//                String sql = QueryUtil.stripSqlData(e.getKey());
+//
+//                sb.append(e.getValue().getTime()).append("ms [").append(e.getValue().getCount()).append("] ").append(sql).append("\n");
+//                if (++n >= 10) {
+//                    break;
+//                }
+//            }
+//        }
+
         sb.append("----------\n\n\n");
 
         return sb.toString();

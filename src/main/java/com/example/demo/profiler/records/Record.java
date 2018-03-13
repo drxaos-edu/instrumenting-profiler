@@ -7,7 +7,7 @@ import java.util.ArrayList;
 @Data
 public class Record {
     private String url;
-    private ArrayList<Call> calls = new ArrayList<Call>();
+    private ArrayList<Call> calls = new ArrayList<>();
     private Long start, end;
 
     public Record(String url) {

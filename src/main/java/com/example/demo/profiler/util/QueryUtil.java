@@ -10,8 +10,22 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.update.Update;
 import net.sf.jsqlparser.util.deparser.*;
+import net.ttddyy.dsproxy.QueryInfo;
 
-public class SqlUtil {
+import java.util.List;
+
+public class QueryUtil {
+
+    public static String queryToCall(List<QueryInfo> queryInfoList) {
+        StringBuilder sb = new StringBuilder();
+        for (QueryInfo queryInfo : queryInfoList) {
+            if (sb.length() > 0) {
+                sb.append(" || ");
+            }
+            sb.append(queryInfo.getQuery());
+        }
+        return sb.toString();
+    }
 
     /**
      * Заменяем все данные в запросах на X и Z

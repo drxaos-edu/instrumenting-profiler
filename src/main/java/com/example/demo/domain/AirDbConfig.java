@@ -1,8 +1,6 @@
 package com.example.demo.domain;
 
 import com.example.demo.domain.air.PostgresqlDialect;
-import com.example.demo.profiler.Profiler;
-import com.example.demo.profiler.util.RecordUtil;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
@@ -43,12 +41,13 @@ public class AirDbConfig {
     public DataSource proxyAirDataSource() {
         return ProxyDataSourceBuilder
                 .create(airDataSource())
-                .beforeQuery((execInfo, queryInfoList) -> {
-                    Profiler.startCall("DB", RecordUtil.queryToCall(queryInfoList));
-                })
-                .afterQuery((execInfo, queryInfoList) -> {
-                    Profiler.endCall("DB", RecordUtil.queryToCall(queryInfoList));
-                })
+//TODO
+//                .beforeQuery((execInfo, queryInfoList) -> {
+//                    Profiler.startCall("DB", QueryUtil.queryToCall(queryInfoList));
+//                })
+//                .afterQuery((execInfo, queryInfoList) -> {
+//                    Profiler.endCall("DB", QueryUtil.queryToCall(queryInfoList));
+//                })
                 .build();
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo.profiler;
 
+import com.example.demo.profiler.records.Profiler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,11 @@ public class ThreadNameServletFilter implements Filter {
             String url = request.getRequestURI();
             String user = SecurityContextHolder.getContext().getAuthentication().getName();
             String cookie = Arrays.stream(request.getCookies()).filter(c -> c.getName().equals("JSESSIONID")).map(Cookie::getValue).findFirst().orElse("-");
-            Thread.currentThread().setName("(Request) " + method + url + " - " + cookie + " (" + user + ")");
+            String info = "(Request) " + method + url + " - " + cookie + " (" + user + ")";
+            Thread.currentThread().setName(info);
+
+            // отправляем расширенную инфу о запросе в профайлер
+            Profiler.url(info);
 
             chain.doFilter(req, res);
         } finally {

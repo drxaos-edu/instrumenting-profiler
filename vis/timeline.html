@@ -1,0 +1,153 @@
+<html>
+<head>
+    <title>Timeline demo</title>
+
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="timeline.js"></script>
+    <link rel="stylesheet" type="text/css" href="timeline.css">
+
+    <link rel="stylesheet" href="codemirror.css">
+    <script src="codemirror.js"></script>
+    <script src="css.js"></script>
+
+    <style type="text/css">
+        html, body {
+            height: 100%;
+            font: 10pt arial;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .CodeMirror {
+            border: 1px solid #eee;
+            flex-grow: 1;
+            min-height: 300px;
+        }
+
+        .CodeMirror-scroll {
+            position: absolute;
+            height: 100%;
+            min-height: 300px;
+            width: 100%;
+        }
+
+        .CodeMirror pre.activeline {
+            background-color: #00ff26;
+        }
+    </style>
+
+    <script type="text/javascript">
+        google.load("visualization", "1");
+
+        // Set callback to run when API is loaded
+        google.setOnLoadCallback(showEditor);
+
+        // Called when the Visualization API is loaded.
+        var editor;
+        var data;
+        var vis;
+        var hlLine;
+        var mapping = {};
+
+        function showEditor() {
+            editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                lineNumbers: true,
+                lineWrapping: false,
+                onChange: function () {
+                    drawVisualization();
+                },
+                onGutterClick: function (cm, n) {
+                    console.log(n);
+                    vis.setSelection([{row: mapping[n]}]);
+                    onSelect();
+                }
+            });
+        }
+
+        function getSelectedRow() {
+            var row = undefined;
+            var sel = vis.getSelection();
+            if (sel.length) {
+                if (sel[0].row != undefined) {
+                    row = sel[0].row;
+                }
+            }
+            return row;
+        }
+
+        function onSelect(event) {
+            var row = getSelectedRow();
+            if (hlLine) {
+                editor.setLineClass(hlLine, null, null);
+            }
+
+            if (row != undefined) {
+                var line = data.getValue(row, 4);
+                hlLine = editor.setLineClass(line, "activeline");
+            }
+        }
+
+        function drawVisualization() {
+            // Create and populate a data table.
+            data = new google.visualization.DataTable();
+            data.addColumn('datetime', 'start');
+            data.addColumn('datetime', 'end');
+            data.addColumn('string', 'content');
+            data.addColumn('string', 'group');
+            data.addColumn('number', 'row');
+            data.addColumn('number', 'datarow');
+
+            var lines = editor.getValue().split('\n');
+            var rowN = 0;
+            for (var i = 0; i < lines.length; i++) {
+                re = /([>]+)(.+)\((\d+)-(\d+)\)/i;
+                found = lines[i].match(re);
+                if (found != null) {
+                    mapping[i] = rowN;
+                    data.addRow([new Date(parseInt(found[3])), new Date(parseInt(found[4])), '<span title="' + found[2] + '">' + found[2] + '</span>', found[1], i, rowN++]);
+                }
+            }
+
+            // specify options
+            var options = {
+                width: "100%",
+                //height: "300px",
+                height: "auto",
+                layout: "box",
+                editable: false,
+                eventMargin: 5,  // minimal margin between events
+                eventMarginAxis: 0, // minimal margin beteen events and the axis
+                //showMajorLabels: false,
+                axisOnTop: true,
+                // groupsWidth : "200px",
+                groupsChangeable: false,
+                groupsOnRight: false,
+                stackEvents: false
+            };
+
+            // Instantiate our timeline object.
+            vis = new links.Timeline(document.getElementById('mytimeline'), options);
+
+            var onselect = onSelect;
+
+            google.visualization.events.addListener(vis, 'select', onselect);
+
+            // Draw our timeline with the created data and options
+            vis.draw(data);
+        }
+
+    </script>
+</head>
+
+<body>
+<div id="mytimeline"></div>
+<div id="space" style="height: 7px"></div>
+<textarea id="code" name="code">
+</textarea>
+</body>
+</html>

@@ -6,10 +6,12 @@ public class Agent {
     private static Instrumentation instrumentation;
 
     public static void premain(String agentArgument, Instrumentation instrumentation) {
-        Agent.instrumentation = instrumentation;
+        //TODO Agent.instrumentation = instrumentation;
     }
 
     public static void enableProfiling() {
-        instrumentation.addTransformer(new ProfilingClassFileTransformer());
+        if (instrumentation != null) {
+            instrumentation.addTransformer(new ProfilingClassFileTransformer());
+        }
     }
 }

@@ -1,7 +1,5 @@
 package com.example.demo.domain;
 
-import com.example.demo.profiler.Profiler;
-import com.example.demo.profiler.util.RecordUtil;
 import net.ttddyy.dsproxy.support.ProxyDataSourceBuilder;
 import org.hibernate.dialect.MySQL57InnoDBDialect;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,12 +42,13 @@ public class MainDbConfig {
     public DataSource proxyDataSource() {
         return ProxyDataSourceBuilder
                 .create(dataSource())
-                .beforeQuery((execInfo, queryInfoList) -> {
-                    Profiler.startCall("DB", RecordUtil.queryToCall(queryInfoList));
-                })
-                .afterQuery((execInfo, queryInfoList) -> {
-                    Profiler.endCall("DB", RecordUtil.queryToCall(queryInfoList));
-                })
+//TODO
+//                .beforeQuery((execInfo, queryInfoList) -> {
+//                    Profiler.startCall("DB", QueryUtil.queryToCall(queryInfoList));
+//                })
+//                .afterQuery((execInfo, queryInfoList) -> {
+//                    Profiler.endCall("DB", QueryUtil.queryToCall(queryInfoList));
+//                })
                 .build();
     }
 

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 public class DemoApplication {
 
     public static void main(String[] args) {
-        Agent.enableProfiling();
+        //TODO Agent.enableProfiling();
         SpringApplication.run(DemoApplication.class, args);
     }
 }

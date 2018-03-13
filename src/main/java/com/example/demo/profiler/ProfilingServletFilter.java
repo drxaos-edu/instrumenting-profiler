@@ -1,5 +1,6 @@
 package com.example.demo.profiler;
 
+import com.example.demo.profiler.records.Profiler;
 import com.example.demo.profiler.records.Record;
 import com.example.demo.profiler.util.RecordUtil;
 import org.slf4j.Logger;
@@ -24,6 +25,8 @@ public class ProfilingServletFilter implements Filter {
         } finally {
             try {
                 Record record = Profiler.finishRecord();
+
+                // Здесь можно отправить трейс в отдельный поток для обработки и отдать уже страницу
                 if (record.duration() > 10) {
                     String dump = RecordUtil.dump(record, 3);
                     System.out.println("\n\n" + dump + "\n\n");
@@ -31,9 +34,7 @@ public class ProfilingServletFilter implements Filter {
             } catch (Exception e) {
                 log.error("profiler error", e);
             }
-
         }
-
     }
 
     @Override
