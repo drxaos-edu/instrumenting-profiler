@@ -30,6 +30,10 @@ public class RecordUtil {
     }
 
     public static String dump(Record record, long lowThreshold) {
+        return "Record: " + record.getUrl() + " " + record.getStart() + "-" + record.getEnd();
+    }
+
+    public static String dumpTODO(Record record, long lowThreshold) {
         ArrayList<Call> calls = record.getCalls();
 
         long now = System.currentTimeMillis();
